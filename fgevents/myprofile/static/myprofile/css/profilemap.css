@@ -1,0 +1,10 @@
+#map {
+    height: 400px;
+    width: 900px;
+    margin: 0 auto;
+    margin-bottom: 30px;
+}
+
+#id_longitude {
+    margin-bottom: 20px;
+}

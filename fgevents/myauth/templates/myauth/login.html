@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{% static 'myauth/css/center-forms.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class='center-forms'>
+<h1>Login</h1>
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Login">
+</form>
+</div>
+{% endblock %}

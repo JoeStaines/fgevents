@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{% static 'myauth/css/center-forms.css' %}" />
+<link rel="stylesheet" href="{% static 'leaflet/leaflet.css' %}" />
+<link rel="stylesheet" href="{% static 'myprofile/css/profilemap.css' %}" />
+{% endblock %}
+
+{% block javascripts %}
+<script src="{% static 'leaflet/leaflet.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class='center-forms'>
+<h1>Profile</h1>
+<div id="map"></div>
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Update">
+</form>
+</div>
+
+<script type="text/javascript">
+var marker;
+var circle;
+var map;
+
+
+
+function addMarker(lat, lng) {
+    marker = new L.marker( [lat, lng] );
+    map.addLayer(marker);
+}
+
+function addRadiusCircle(lat, lng, radius) {
+    radius = radius*1000;
+    circle = new L.circle( [lat, lng], radius, {
+        color: 'blue',
+        fillColor: "#9bf",
+        fillOpacity: 0.5
+    });
+    map.addLayer(circle);
+}
+
+function removeMarkers() {
+    if (typeof marker !== 'undefined') {
+        map.removeLayer(marker);
+    };
+    
+    if (typeof circle !== 'undefined') {
+        map.removeLayer(circle);
+    };
+}
+
+function getSearchRadius() {
+    radEle = document.getElementById("id_search_radius");
+    radius = radEle.value
+    if (typeof radius === 'undefined') {
+        radius = 0;
+    };
+    return radius
+}
+
+function getLatLng() {
+    lat = document.getElementById('id_latitude').value;
+    lng = document.getElementById('id_longitude').value;
+    
+    if (typeof lat === 'undefined') {
+        lat = 0.0;
+    };
+    
+    if (typeof lng === 'undefined') {
+        lng = 0.0;
+    }
+    
+    return {
+        lat: lat,
+        lng: lng
+    };
+}
+
+function processMapContent() {
+    removeMarkers();
+    latlng = getLatLng()
+    addMarker(latlng.lat, latlng.lng);
+    
+    radius = getSearchRadius()
+    addRadiusCircle(latlng.lat, latlng.lng, radius);
+}
+
+function onMapClick(e) {
+    var latEle = document.getElementById("id_latitude");
+    var longEle = document.getElementById("id_longitude");
+    var latLngWrap = e.latlng.wrap();
+    latEle.value = latLngWrap.lat.toFixed(6);
+    longEle.value = latLngWrap.lng.toFixed(6);
+    processMapContent();
+}
+
+
+// Determine if latitude and longitude have been defined and zoom into point if so
+{% if user_lat and user_long %}
+map = L.map('map').setView([{{ user_lat }}, {{ user_long }}], 10);
+
+// Add the initial point if we know the latitude and longitude
+addMarker( {{ user_lat }}, {{ user_long }} );
+
+// Add the search circle to the map also
+addRadiusCircle( {{ user_lat }}, {{ user_long }}, {{ user_search_radius }} );
+{% else %}
+map = L.map('map').setView([0.0, 0.0], 2);
+{% endif %}
+
+L.tileLayer( 'http://{s}.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="http://osm.org/copyright" title="OpenStreetMap" target="_blank">OpenStreetMap</a> contributors | Tiles Courtesy of <a href="http://www.mapquest.com/" title="MapQuest" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png" width="16" height="16">',
+    subdomains: ['otile1','otile2','otile3','otile4']
+}).addTo( map );
+
+map.on('click', onMapClick);
+
+$('#id_search_radius').bind('input', processMapContent);
+</script>
+{% endblock %}
