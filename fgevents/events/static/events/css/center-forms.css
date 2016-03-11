@@ -1,0 +1,23 @@
+.center-forms form {
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+.center-forms form input {
+    width: 300px;
+}
+
+.center-forms form select {
+    width: 300px;
+}
+
+#week_form_div {
+    display: block;
+}
+#month_form_div {
+    display: none;
+}
+
+#onetime_form_div {
+    display: none;
+}

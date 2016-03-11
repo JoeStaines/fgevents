@@ -122,5 +122,7 @@ L.tileLayer( 'http://{s}.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.png', {
 map.on('click', onMapClick);
 
 $('#id_search_radius').bind('input', processMapContent);
+$('#id_latitude').bind('input', processMapContent);
+$('#id_longitude').bind('input', processMapContent);
 </script>
 {% endblock %}

@@ -14,8 +14,11 @@ def log_in(request):
         return redirect("/")
 
     error_message = ""
+    
+    # If they have submitted a form, validiate and log in user
     if request.method == "POST":
         form = LoginForm(request.POST)
+        
         if form.is_valid():
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
@@ -28,13 +31,15 @@ def log_in(request):
                     error_message = "User not active"
             else:
                 error_message = "User does not exist with this username and password"
+    
+    # If from a GET request, render a blank form
     else:
-        form = LoginForm()
+        form = LoginForm(label_suffix='')
     return render(request, "myauth/login.html", {'form': form, 'error_message': error_message})
     
 def log_out(request):
     logout(request)
-    return redirect(reverse("login"))
+    return redirect(reverse("myauth-login"))
     
 def register(request):
     
@@ -52,5 +57,5 @@ def register(request):
                 profile.save()
             return redirect(reverse("profile-index"))
     else:
-        form = UserCreationForm()
+        form = UserCreationForm(label_suffix='')
     return render(request, "myauth/register.html", {'form': form})

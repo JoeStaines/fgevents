@@ -1,0 +1,45 @@
+{% load staticfiles %}
+
+<link rel="stylesheet" href="{% static 'events/css/center-forms.css' %}" />
+
+<div class="center-forms">
+<form action='' method='post'>
+    {% csrf_token %}
+    {{ event_form }}
+    
+    <h1> Date </h1>
+    <div id="week_form_div">
+    {{ week_form }}
+    </div>
+    
+    <div id="month_form_div">
+    {{ month_form }}
+    </div>
+    
+    <div id="onetime_form_div">
+    {{ onetime_form }}
+    </div>
+    
+    <input type="submit" value="Create Event">
+</form>
+</div>
+
+<script type="text/javascript">
+function changeForm() {
+    document.getElementById('week_form_div').style.display = "none";
+    document.getElementById('month_form_div').style.display = "none";
+    document.getElementById('onetime_form_div').style.display = "none";
+    
+    var selectValue = document.getElementById('{{ event_form.event_type.auto_id }}').value;
+    
+    if (selectValue == "week") {
+        document.getElementById('week_form_div').style.display = "block";
+    } else if (selectValue == "month") {
+        document.getElementById('month_form_div').style.display = "block";
+    } else if (selectValue == "onetime") {
+        document.getElementById('onetime_form_div').style.display = "block";
+    }
+}
+
+window.onload = changeForm;
+</script>
