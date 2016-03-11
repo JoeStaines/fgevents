@@ -1,13 +1,67 @@
+{% extends 'base.html' %}
+
 {% load staticfiles %}
 
-<link rel="stylesheet" href="{% static 'events/css/center-forms.css' %}" />
+{% block stylesheets %}
+<link rel="stylesheet" href="{% static 'myauth/css/center-forms.css' %}" />
+{% endblock %}
 
+{% block content %}
 <div class="center-forms">
 <form action='' method='post'>
     {% csrf_token %}
-    {{ event_form }}
+    {{ event_form.non_field_errors }}
     
-    <h1> Date </h1>
+    {{ event_form.event_type.errors }}
+    {{ event_form.event_type.label_tag }}
+    {{ event_form.event_type }}
+    
+    {{ event_form.event_name.errors }}
+    {{ event_form.event_name.label_tag }}
+    {{ event_form.event_name }}
+    
+    {{ event_form.contact.errors }}
+    {{ event_form.contact.label_tag }} <br/>
+    <span class="help_text">{{ event_form.contact.help_text }}</span>
+    {{ event_form.contact }}
+    
+    {{ event_form.info.errors }}
+    {{ event_form.info.label_tag }}
+    {{ event_form.info }}
+    
+    <h2 class="left">Address</h2>
+    
+    {{ event_form.address.errors }}
+    {{ event_form.address.label_tag }}
+    {{ event_form.address }}
+    
+    {{ event_form.town.errors }}
+    {{ event_form.town.label_tag }}
+    {{ event_form.town }}
+    
+    {{ event_form.county.errors }}
+    {{ event_form.county.label_tag }}
+    {{ event_form.county }}
+    
+    {{ event_form.country.errors }}
+    {{ event_form.country.label_tag }}
+    {{ event_form.country }}
+    
+    {{ event_form.postcode.errors }}
+    {{ event_form.postcode.label_tag }}
+    {{ event_form.postcode }}
+    
+    <br> <br> <br>
+    
+    {{ event_form.latitude.errors }}
+    {{ event_form.latitude.label_tag }}
+    {{ event_form.latitude }}
+    
+    {{ event_form.longitude.errors }}
+    {{ event_form.longitude.label_tag }}
+    {{ event_form.longitude }}
+    
+    <h2 class="left"> Date </h2>
     <div id="week_form_div">
     {{ week_form }}
     </div>
@@ -23,6 +77,7 @@
     <input type="submit" value="Create Event">
 </form>
 </div>
+
 
 <script type="text/javascript">
 function changeForm() {
@@ -43,3 +98,5 @@ function changeForm() {
 
 window.onload = changeForm;
 </script>
+
+{% endblock %}

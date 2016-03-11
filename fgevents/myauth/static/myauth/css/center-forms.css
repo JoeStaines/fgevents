@@ -13,6 +13,12 @@
     text-align: center;
 }
 
+.center-forms .left {
+    max-width: 300px;
+    margin: 20px auto;
+    text-align: left;
+}
+
 .center-forms form label {
 
 }
@@ -22,6 +28,15 @@
     height: 40px;
     margin: 5px 0;
     font-size: 18px;
+    margin-bottom: 15px;
+}
+
+.center-forms form select {
+    width: 300px;
+    height: 40px;
+    margin: 5px 0;
+    font-size: 18px;
+    margin-bottom: 15px;
 }
 
 .center-forms form input[type=submit] {
@@ -45,4 +60,8 @@ input[type="number"]::-webkit-inner-spin-button {
 
 .center-forms input[type="number"] {
     -moz-appearance: textfield;
+}
+
+.center-forms .help_text {
+    font-size: 12px
 }

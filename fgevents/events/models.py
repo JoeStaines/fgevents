@@ -29,7 +29,7 @@ class Events(models.Model):
     postcode = models.CharField(max_length=20, null=True)
     latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True)
     longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True)
-    contact = models.CharField(max_length=100)
+    contact = models.CharField(max_length=100, help_text='Provide a website, facebook group or email etc. where people can get more info')
     info = models.TextField(max_length=20000)
     date_created = models.DateTimeField(auto_now_add=True)
     userID = models.ForeignKey(settings.AUTH_USER_MODEL)
