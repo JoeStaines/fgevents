@@ -15,6 +15,10 @@ def createevent(request):
     week_form = WeeklyDateForm(prefix="week", label_suffix='')
     month_form = MonthlyDateForm(prefix="month", label_suffix='')
     onetime_form = OneTimeDateForm(prefix="onetime", label_suffix='')
+    
+    weekly_formset = WeeklyDateFormset(prefix="week")
+    monthly_formset = MonthlyDateFormset(prefix="month")
+    
 
     if request.method == "POST":
         event_form = EventForm(request.POST, prefix="event", label_suffix='')
@@ -48,6 +52,8 @@ def createevent(request):
                 'event_form': event_form,
                 'week_form': week_form,
                 'month_form': month_form,
-                'onetime_form': onetime_form
+                'onetime_form': onetime_form,
+                'weekly_formset': weekly_formset,
+                'monthly_formset': monthly_formset
                 })
                 

@@ -6,6 +6,10 @@
 <link rel="stylesheet" href="{% static 'myauth/css/center-forms.css' %}" />
 {% endblock %}
 
+{% block javascripts %}
+<script src="{% static 'js/jquery.formset.min.js' %}"></script>
+{% endblock %}
+
 {% block content %}
 <div class="center-forms">
 <form action='' method='post'>
@@ -61,13 +65,23 @@
     {{ event_form.longitude.label_tag }}
     {{ event_form.longitude }}
     
+    
     <h2 class="left"> Date </h2>
+    
+    {{ weekly_formset.management_form }}
+    
     <div id="week_form_div">
-    {{ week_form }}
+    {% for weekform in weekly_formset %}
+        <div class="week_container">{{ weekform }}</div>
+    {% endfor %}
     </div>
     
+    {{ monthly_formset.managment_form }}
+    
     <div id="month_form_div">
-    {{ month_form }}
+    {% for monthform in monthly_formset %}
+        <div class="month_container">{{ monthform }}</div>
+    {% endfor %}
     </div>
     
     <div id="onetime_form_div">
@@ -78,6 +92,25 @@
 </form>
 </div>
 
+<script type="text/javascript">
+    $(function() {
+        $('.week_container').formset({
+            prefix: '{{ weekly_formset.prefix }}',
+            formCssClass: 'dynamic-formset1',
+            addText: 'add another date',
+            deleteText: 'remove'
+        });
+        
+        $('.month_container').formset({
+            prefix: '{{ monthly_formset.prefix }}',
+            formCssClass: 'dynamic-formset1',
+            addText: 'add another date',
+            deleteText: 'remove'
+        })
+    })
+</script>
+
+<link rel="stylesheet" href="{% static 'events/css/formset-css.css' %}" />
 
 <script type="text/javascript">
 function changeForm() {

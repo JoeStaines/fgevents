@@ -1,4 +1,5 @@
 from django.forms import ModelForm, Select
+from django.forms.formsets import formset_factory
 
 from .models import Events, WeeklyRecurringDate, MonthlyRecurringDate, OneTimeEventDate, EventGames
 
@@ -19,10 +20,14 @@ class WeeklyDateForm(ModelForm):
         model = WeeklyRecurringDate
         fields = ['weekday']
         
+WeeklyDateFormset = formset_factory(WeeklyDateForm, can_delete=False)
+        
 class MonthlyDateForm(ModelForm):
     class Meta:
         model = MonthlyRecurringDate
         fields = ['weekday', 'week_number']
+        
+MonthlyDateFormset = formset_factory(MonthlyDateForm, can_delete=False)
         
 class OneTimeDateForm(ModelForm):
     class Meta:
