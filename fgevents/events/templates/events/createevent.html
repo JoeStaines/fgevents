@@ -4,6 +4,7 @@
 
 {% block stylesheets %}
 <link rel="stylesheet" href="{% static 'myauth/css/center-forms.css' %}" />
+<link rel="stylesheet" href="{% static 'events/css/formset-css.css' %}" />
 {% endblock %}
 
 {% block javascripts %}
@@ -25,7 +26,7 @@
     {{ event_form.event_name }}
     
     {{ event_form.contact.errors }}
-    {{ event_form.contact.label_tag }} <br/>
+    {{ event_form.contact.label_tag }} <img width=16, height=16 src="{% static 'events/images/helpicon.png' %}"  title="Website link, Facebook group, Discord link etc where someone can find more info and/or get in touch with the community"/><br/>
     <span class="help_text">{{ event_form.contact.help_text }}</span>
     {{ event_form.contact }}
     
@@ -35,28 +36,6 @@
     
     <h2 class="left">Address</h2>
     
-    {{ event_form.address.errors }}
-    {{ event_form.address.label_tag }}
-    {{ event_form.address }}
-    
-    {{ event_form.town.errors }}
-    {{ event_form.town.label_tag }}
-    {{ event_form.town }}
-    
-    {{ event_form.county.errors }}
-    {{ event_form.county.label_tag }}
-    {{ event_form.county }}
-    
-    {{ event_form.country.errors }}
-    {{ event_form.country.label_tag }}
-    {{ event_form.country }}
-    
-    {{ event_form.postcode.errors }}
-    {{ event_form.postcode.label_tag }}
-    {{ event_form.postcode }}
-    
-    <br> <br> <br>
-    
     {{ event_form.latitude.errors }}
     {{ event_form.latitude.label_tag }}
     {{ event_form.latitude }}
@@ -65,24 +44,50 @@
     {{ event_form.longitude.label_tag }}
     {{ event_form.longitude }}
     
+    <h2 class="left">Games</h2>
+    
+    
+    {% for gamesform in games_formset %}
+        <div class="games_container">
+            {{ gamesform.game.errors }} 
+            {{ gamesform.game.label_tag }} <br>
+            {{ gamesform.game }}
+        </div>
+    {% endfor %}
+    
+    {{ games_formset.management_form }}
     
     <h2 class="left"> Date </h2>
     
-    {{ weekly_formset.management_form }}
     
     <div id="week_form_div">
     {% for weekform in weekly_formset %}
-        <div class="week_container">{{ weekform }}</div>
+        <div class="week_container">
+            {{ weekform.weekday.errors }}
+            {{ weekform.weekday.label_tag }} <br>
+            {{ weekform.weekday }}
+        </div>
     {% endfor %}
     </div>
     
-    {{ monthly_formset.managment_form }}
+    {{ weekly_formset.management_form }}
+    
     
     <div id="month_form_div">
     {% for monthform in monthly_formset %}
-        <div class="month_container">{{ monthform }}</div>
+        <div class="month_container">
+            {{ monthform.weekday.errors }}
+            {{ monthform.weekday.label_tag }} <br>
+            {{ monthform.weekday }}
+            <br>
+            {{ monthform.week_number.errors }}
+            {{ monthform.week_number.label_tag }} <br>
+            {{ monthform.week_number }}
+        </div>
     {% endfor %}
     </div>
+    
+    {{ monthly_formset.management_form }}
     
     <div id="onetime_form_div">
     {{ onetime_form }}
@@ -94,6 +99,7 @@
 
 <script type="text/javascript">
     $(function() {
+        
         $('.week_container').formset({
             prefix: '{{ weekly_formset.prefix }}',
             formCssClass: 'dynamic-formset1',
@@ -103,14 +109,20 @@
         
         $('.month_container').formset({
             prefix: '{{ monthly_formset.prefix }}',
-            formCssClass: 'dynamic-formset1',
+            formCssClass: 'dynamic-formset2',
             addText: 'add another date',
             deleteText: 'remove'
-        })
-    })
+        });
+        
+        $('.games_container').formset({
+            prefix: '{{ games_formset.prefix }}',
+            formCssClass: 'dynamic-formset3',
+            addText: 'add another game',
+            deleteText: 'remove'
+        });
+        
+    });
 </script>
-
-<link rel="stylesheet" href="{% static 'events/css/formset-css.css' %}" />
 
 <script type="text/javascript">
 function changeForm() {

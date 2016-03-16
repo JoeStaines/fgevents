@@ -5,5 +5,18 @@
 
 .delete-row {
     text-decoration: none;
-    color: #3399ff
+    color: #3399ff;
+    text-align: right;
+}
+
+.games_container input {
+    width: 200px !important;
+}
+
+.week_container select {
+    width: 200px !important;
+}
+
+.month_container select {
+    width: 200px !important;
 }

@@ -12,13 +12,10 @@ def createevent(request):
     # e.g., there is a 'weekday' field both in the weekly form and monthly form
     # and one will overwrite the other
     event_form = EventForm(prefix="event", label_suffix='')
-    week_form = WeeklyDateForm(prefix="week", label_suffix='')
-    month_form = MonthlyDateForm(prefix="month", label_suffix='')
-    onetime_form = OneTimeDateForm(prefix="onetime", label_suffix='')
     
-    weekly_formset = WeeklyDateFormset(prefix="week")
-    monthly_formset = MonthlyDateFormset(prefix="month")
-    
+    weekly_formset = WeeklyDateFormset(prefix="week", label_suffix='')
+    monthly_formset = MonthlyDateFormset(prefix="month", label_suffix='')
+    games_formset = EventGamesFormset(prefix="games", label_suffix='')
 
     if request.method == "POST":
         event_form = EventForm(request.POST, prefix="event", label_suffix='')
@@ -54,6 +51,7 @@ def createevent(request):
                 'month_form': month_form,
                 'onetime_form': onetime_form,
                 'weekly_formset': weekly_formset,
-                'monthly_formset': monthly_formset
+                'monthly_formset': monthly_formset,
+                'games_formset': games_formset
                 })
                 
