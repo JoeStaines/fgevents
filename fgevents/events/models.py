@@ -29,13 +29,19 @@ class Events(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     userID = models.ForeignKey(settings.AUTH_USER_MODEL)
     
+    def __unicode__(self):
+        return self.event_name
+    
 class WeeklyRecurringDate(models.Model):
     eventID = models.ForeignKey(Events)
-    weekday = models.CharField(max_length=1, choices=WEEKDAYS)
+    weekday = models.IntegerField(choices=WEEKDAYS)
+    
+    def __unicode__(self):
+        return "{} -- {}".format(self.eventID.event_name, self.weekday)
     
 class MonthlyRecurringDate(models.Model):
     eventID = models.ForeignKey(Events)
-    weekday = models.CharField(max_length=1, choices=WEEKDAYS)
+    weekday = models.IntegerField(choices=WEEKDAYS)
     
     WEEK_NUMBERS = (
         (1, "1st Week"),
@@ -44,13 +50,22 @@ class MonthlyRecurringDate(models.Model):
         (4, "4th Week")
     )
     
-    week_number = models.CharField(max_length=1, choices=WEEK_NUMBERS)
+    week_number = models.IntegerField(choices=WEEK_NUMBERS)
+    
+    def __unicode__(self):
+        return "{} -- {} - {}".format(self.eventID.event_name, self.weekday, self.week_number)
     
 class OneTimeEventDate(models.Model):
     eventID = models.OneToOneField(Events, on_delete=models.CASCADE, primary_key=True)
     start_date = models.DateField()
     end_date = models.DateField()
     
+    def __unicode__(self):
+        return "{} -- {} - {}".format(self.eventID.event_name, self.start_date, self.end_date)
+    
 class EventGames(models.Model):
     eventID = models.ForeignKey(Events)
     game = models.CharField(max_length=50)
+    
+    def __unicode__(self):
+        return "{} -- {}".format(self.eventID.event_name, self.game)

@@ -2,17 +2,20 @@ from django.test import TestCase, Client
 from django.core.exceptions import ValidationError
 
 from .models import *
+from myauth.models import MyUser
+
+import datetime
 
 # Create your tests here.
 
-def create_event(new_data={}):
+def create_event(new_data={}, c=Client()):
     data = {
-        'event_type': 'week',
-        'event_name': 'Test',
-        'latitude': 0.0,
-        'longitude': 0.0,
-        'contact': 'www.test.com',
-        'info': 'Some test text',
+        'event-event_type': 'week',
+        'event-event_name': 'Test',
+        'event-latitude': 0.0,
+        'event-longitude': 0.0,
+        'event-contact': 'www.test.com',
+        'event-info': 'Some test text',
         'games-TOTAL_FORMS': 1,
         'games-INITIAL_FORMS': 0,
         'games-MAX_NUM_FORMS': 15,
@@ -25,15 +28,22 @@ def create_event(new_data={}):
         'month-INITIAL_FORMS': 0,
         'month-MAX_NUM_FORMS': 2,
         'month-0-weekday': 0,
-        'month-0-week_number': 1
+        'month-0-week_number': 1,
     }
     data.update(new_data)
-    c = Client()
-    c.post('/events/create/', data)
-    
+    response = c.post('/events/create/', data)
+
+def date_to_string(date):
+    return "{}-{}-{}".format(date.year, date.month, date.day)
+
 class EventCreateTests(TestCase):
+    def setUp(self):
+        user = MyUser.objects.create_user('temp@temp.com', 'temporary')
+        self.c = Client()
+        self.c.login(email="temp@temp.com", password="temporary")
+
     def test_event_saved(self):
-        create_event()
+        create_event(c=self.c)
         queryset = Events.objects.filter(event_name='Test')
         self.assertIsNotNone(queryset.first())
     
@@ -42,5 +52,48 @@ class EventCreateTests(TestCase):
             'games-TOTAL_FORMS': 2,
             'games-1-game': 'Street Fighter 5'
         }
-        self.assertRaises(ValidationError, create_event(data))
+        self.assertRaises(ValidationError, create_event(data, self.c))
+        
+    def test_start_date_before_end_date(self):
+        today = datetime.date.today()
+        start_date = today + datetime.timedelta(days=1)
+        end_date = today + datetime.timedelta(days=2)
+        start_str = date_to_string(start_date)
+        end_str = date_to_string(end_date)
+        data = {
+            'event-event_type': 'onetime',
+            'onetime-start_date': start_str,
+            'onetime-end_date': end_str
+        }
+        create_event(data, self.c)
+        queryset = Events.objects.filter(event_name='Test')
+        self.assertIsNotNone(queryset.first())
+        queryset = OneTimeEventDate.objects.filter(start_date__contains=start_date)
+        self.assertIsNotNone(queryset.first())
+        
+    def test_date_after_end_date(self):
+        today = datetime.date.today()
+        start_date = today + datetime.timedelta(days=2)
+        end_date = today + datetime.timedelta(days=1)
+        start_str = date_to_string(start_date)
+        end_str = date_to_string(end_date)
+        data = {
+            'event-event_type': 'onetime',
+            'onetime-start_date': start_str,
+            'onetime-end_date': end_str
+        }
+        self.assertRaises(ValidationError, create_event(data, self.c))
+        
+    def test_start_date_before_today(self):
+        today = datetime.date.today()
+        start_date = today + datetime.timedelta(days=-1)
+        end_date = today + datetime.timedelta(days=1)
+        start_str = date_to_string(start_date)
+        end_str = date_to_string(end_date)
+        data = {
+            'event-event_type': 'onetime',
+            'onetime-start_date': start_str,
+            'onetime-end_date': end_str
+        }
+        self.assertRaises(ValidationError, create_event(data, self.c))
         

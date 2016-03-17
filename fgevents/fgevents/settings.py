@@ -131,4 +131,7 @@ STATICFILES_DIRS = [
 LOGIN_URL = '/auth/login'
 LOGOUT_URL = '/auth/logout'
 
+NOSE_ARGS = ['--nocapture',
+             '--nologcapture',]
+
 from settings_local import *
