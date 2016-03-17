@@ -81,10 +81,22 @@ class OneTimeDateForm(ModelForm):
         if today > start_date:
             raise ValidationError("The date has to be today or in the future")
             
-        
+
+class BaseGamesFormset(BaseFormSet):
+    def clean(self):
+        if any(self.errors):
+            return
+            
+        games = []
+        for form in self.forms:
+            game = form.cleaned_data['game']
+            if game in games:
+                raise ValidationError("Cannot list the same game twice")
+            games.append(game)
+            
 class EventGamesForm(ModelForm):
     class Meta:
         model = EventGames
         fields = ['game']
         
-EventGamesFormset = formset_factory(EventGamesForm, min_num=1, validate_min=True, extra=0, max_num=15)
+EventGamesFormset = formset_factory(EventGamesForm, formset=BaseGamesFormset, min_num=1, validate_min=True, extra=0, max_num=15)

@@ -31,7 +31,7 @@ def create_event(new_data={}, c=Client()):
         'month-0-week_number': 1,
     }
     data.update(new_data)
-    response = c.post('/events/create/', data)
+    return c.post('/events/create/', data)
 
 def date_to_string(date):
     return "{}-{}-{}".format(date.year, date.month, date.day)
@@ -52,7 +52,8 @@ class EventCreateTests(TestCase):
             'games-TOTAL_FORMS': 2,
             'games-1-game': 'Street Fighter 5'
         }
-        self.assertRaises(ValidationError, create_event(data, self.c))
+        response = create_event(data, self.c)
+        self.assertFormsetError(response, "games_formset",  None, None, "Cannot list the same game twice", "")
         
     def test_start_date_before_end_date(self):
         today = datetime.date.today()
@@ -82,7 +83,8 @@ class EventCreateTests(TestCase):
             'onetime-start_date': start_str,
             'onetime-end_date': end_str
         }
-        self.assertRaises(ValidationError, create_event(data, self.c))
+        response = create_event(data, self.c)
+        self.assertFormError(response, "onetime_form",  None, "The start date has to come before the end date", "")
         
     def test_start_date_before_today(self):
         today = datetime.date.today()
@@ -95,5 +97,6 @@ class EventCreateTests(TestCase):
             'onetime-start_date': start_str,
             'onetime-end_date': end_str
         }
-        self.assertRaises(ValidationError, create_event(data, self.c))
+        response = create_event(data, self.c)
+        self.assertFormError(response, "onetime_form",  None, "The date has to be today or in the future", "")
         
