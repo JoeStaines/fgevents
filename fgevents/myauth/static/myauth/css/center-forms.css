@@ -7,7 +7,7 @@
     margin: 0 auto;
 }
 
-.center-forms h1 {
+.center-forms h1, p{
     max-width: 300px;
     margin: 20px auto;
     text-align: center;

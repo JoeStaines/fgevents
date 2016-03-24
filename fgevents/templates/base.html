@@ -5,10 +5,12 @@
 <head>
     <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Poiret+One' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
     <link rel="stylesheet" href="{% static 'css/base.css' %}" />
     {% block stylesheets %} {% endblock %}
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
     {% block javascripts %} {% endblock %}
 </head>
 
@@ -17,7 +19,7 @@
 <body>
     <div id="topbar-background">
     <div id="topbar-logo">
-        <a href="/">FGevents</a>
+        <img src="{% static 'images/arrow.png' %}" width=32 height=64 /><a href="/">FGevents</a>
     </div>
     <div id="topbar">
         <div id="site-menu">

@@ -1,13 +1,19 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
+
 from .forms import *
+from .models import Events
 
 # Create your views here.
 
 def index(request):
     pass
 
+def detail(request, event_id):
+    event = get_object_or_404(Events, pk=event_id)
+    return render(request, 'events/detail.html', {'event': event})
+    
 @login_required    
 def createevent(request):
     # Apply prefixes to the forms so the field names do not clash

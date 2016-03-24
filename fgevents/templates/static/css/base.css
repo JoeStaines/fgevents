@@ -21,6 +21,10 @@ html, body {
     font-size: 3.5em;
 }
 
+#topbar-logo img {
+    padding-right: 20px;
+}
+
 #topbar-logo a {
     text-decoration: none;
     color: #f2f2f2;

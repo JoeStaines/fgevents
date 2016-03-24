@@ -52,11 +52,11 @@ class BaseMonthlyFormset(BaseFormSet):
         days_week_pair = []
         for form in self.forms:
             day = form.cleaned_data['weekday']
-            week_no = form.cleaned['week_number']
+            week_no = form.cleaned_data['week_number']
             pair = [day, week_no]
             if pair in days_week_pair:
                 raise forms.ValidationError("The combination of week day and week number has to be unique")
-            days.append(pair)
+            days_week_pair.append(pair)
         
 MonthlyDateFormset = formset_factory(MonthlyDateForm, formset=BaseMonthlyFormset, min_num=1, validate_min=True, extra=0, max_num=2)
         

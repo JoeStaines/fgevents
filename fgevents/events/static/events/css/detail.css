@@ -1,0 +1,8 @@
+.center {
+    max-width: 1000px;
+    margin: auto;
+}
+
+.center h1 {
+    text-align: center;
+}

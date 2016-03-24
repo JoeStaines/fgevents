@@ -128,8 +128,8 @@ STATICFILES_DIRS = [
     "C:/Users/Joe/Documents/GitHub/fgevents/fgevents/templates/static"
 ]
 
-LOGIN_URL = '/auth/login'
-LOGOUT_URL = '/auth/logout'
+LOGIN_URL = '/auth/login/'
+LOGOUT_URL = '/auth/logout/'
 
 NOSE_ARGS = ['--nocapture',
              '--nologcapture',]

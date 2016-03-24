@@ -5,14 +5,21 @@
 {% block stylesheets %}
 <link rel="stylesheet" href="{% static 'myauth/css/center-forms.css' %}" />
 <link rel="stylesheet" href="{% static 'events/css/formset-css.css' %}" />
+<link rel="stylesheet" href="{% static 'events/css/createevent.css' %}"/>
+<link rel="stylesheet" href="{% static 'leaflet/leaflet.css' %}" />
 {% endblock %}
 
 {% block javascripts %}
 <script src="{% static 'js/jquery.formset.min.js' %}"></script>
+<script src="{% static 'leaflet/leaflet.js' %}"></script>
 {% endblock %}
 
 {% block content %}
 <div class="center-forms">
+<div id="map"></div>
+
+<p>Click the map to indicate the location of your event</p>
+
 <form action='' method='post'>
     {% csrf_token %}
     {{ event_form.non_field_errors }}
@@ -34,7 +41,7 @@
     {{ event_form.info.label_tag }}
     {{ event_form.info }}
     
-    <h2 class="left">Address</h2>
+    <h2 class="left">Location</h2>
     
     {{ event_form.latitude.errors }}
     {{ event_form.latitude.label_tag }}
@@ -97,9 +104,45 @@
 </form>
 </div>
 
+
 <script type="text/javascript">
-    $(function() {
         
+    function gameAutocomplete(id) {
+        var gameTags = [
+            "Street Fighter 4",
+            "Street Fighter 5",
+            "Guilty Gear Xrd Sign",
+            "Guilty Gear Xrd Revelator",
+            "Mortal Kombat X",
+            "Killer Instinct",
+            "Blazblue Chrono Phantasma",
+            "Blazblue Central Fiction",
+            "Tekken Tag Tounament 2",
+            "Tekken 7",
+            "Soul Calibur 5",
+            "Dead or Alive 5 Last Round",
+            "Super Smash Bros Melee",
+            "Super Smash Bros Brawl",
+            "Super Smash Bros Wii U"
+        ];
+        console.log('#' + id);
+        $(  "#" + id ).autocomplete({
+            source: gameTags
+        });
+    };
+
+    $(function() {
+        gameAutocomplete('id_games-0-game')
+    });
+    
+    function applyAutocomplete(row) {
+        console.log(row);
+        console.log(row[0].children[2].id); 
+        gameAutocomplete(row[0].children[2].id);
+    };
+        
+    $(function() {
+    
         $('.week_container').formset({
             prefix: '{{ weekly_formset.prefix }}',
             formCssClass: 'dynamic-formset1',
@@ -118,7 +161,8 @@
             prefix: '{{ games_formset.prefix }}',
             formCssClass: 'dynamic-formset3',
             addText: 'add another game',
-            deleteText: 'remove'
+            deleteText: 'remove',
+            added: applyAutocomplete
         });
         
     });
@@ -142,6 +186,77 @@ function changeForm() {
 }
 
 window.onload = changeForm;
+</script>
+
+<script type="text/javascript">
+var marker;
+var circle;
+var map;
+
+
+
+function addMarker(lat, lng) {
+    marker = new L.marker( [lat, lng] );
+    map.addLayer(marker);
+}
+
+function removeMarkers() {
+    if (typeof marker !== 'undefined') {
+        map.removeLayer(marker);
+    };
+    
+    if (typeof circle !== 'undefined') {
+        map.removeLayer(circle);
+    };
+}
+
+function getLatLng() {
+    lat = document.getElementById('id_event-latitude').value;
+    lng = document.getElementById('id_event-longitude').value;
+    
+    if (typeof lat === 'undefined') {
+        lat = 0.0;
+    };
+    
+    if (typeof lng === 'undefined') {
+        lng = 0.0;
+    }
+    
+    return {
+        lat: lat,
+        lng: lng
+    };
+}
+
+function processMapContent() {
+    removeMarkers();
+    latlng = getLatLng()
+    addMarker(latlng.lat, latlng.lng);
+    
+}
+
+function onMapClick(e) {
+    var latEle = document.getElementById("id_event-latitude");
+    var longEle = document.getElementById("id_event-longitude");
+    var latLngWrap = e.latlng.wrap();
+    latEle.value = latLngWrap.lat.toFixed(6);
+    longEle.value = latLngWrap.lng.toFixed(6);
+    processMapContent();
+}
+
+
+// Determine if latitude and longitude have been defined and zoom into point if so
+map = L.map('map').setView([0.0, 0.0], 2);
+
+L.tileLayer( 'http://{s}.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="http://osm.org/copyright" title="OpenStreetMap" target="_blank">OpenStreetMap</a> contributors | Tiles Courtesy of <a href="http://www.mapquest.com/" title="MapQuest" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png" width="16" height="16">',
+    subdomains: ['otile1','otile2','otile3','otile4']
+}).addTo( map );
+
+map.on('click', onMapClick);
+
+$('#id_event-latitude').bind('input', processMapContent);
+$('#id_event-longitude').bind('input', processMapContent);
 </script>
 
 {% endblock %}

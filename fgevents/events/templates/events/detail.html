@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{% static 'events/css/detail.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="center">
+    <h1>{{ event.event_name }}</h1>
+    {% if event.event_type == "week" %}
+        <h3>Weekly event every: <br/>
+        {% for week in event.weekly.all %}
+            {{ week.get_weekday_display }} <br/>
+        {% endfor %} </h3>
+    {% elif event.event_type == "month" %}
+        <h3>Monthly event every: <br/>
+        {% for month in event.monthly.all %}
+            {{ month.get_week_number_display }} {{ month.get_weekday_display }} <br/>
+        {% endfor %} </h3>
+    {% elif event.event_type == "onetime" %}
+    
+    {% endif %}
+    
+</div>
+{% endblock %}

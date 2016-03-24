@@ -22,10 +22,10 @@ class Events(models.Model):
         ( 'onetime', 'One Time Event') )
     event_type = models.CharField(max_length=10, choices=EVENT_CHOICES, default='week')
     event_name = models.CharField(max_length=50)
-    latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True)
-    longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True)
-    contact = models.CharField(max_length=100)
-    info = models.TextField(max_length=20000)
+    latitude = models.DecimalField(max_digits=9, decimal_places=6)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6)
+    contact = models.CharField(max_length=100, null=True)
+    info = models.TextField(max_length=20000, null=True)
     date_created = models.DateTimeField(auto_now_add=True)
     userID = models.ForeignKey(settings.AUTH_USER_MODEL)
     
@@ -33,14 +33,14 @@ class Events(models.Model):
         return self.event_name
     
 class WeeklyRecurringDate(models.Model):
-    eventID = models.ForeignKey(Events)
+    eventID = models.ForeignKey(Events, related_name="weekly")
     weekday = models.IntegerField(choices=WEEKDAYS)
     
     def __unicode__(self):
         return "{} -- {}".format(self.eventID.event_name, self.weekday)
     
 class MonthlyRecurringDate(models.Model):
-    eventID = models.ForeignKey(Events)
+    eventID = models.ForeignKey(Events, related_name="monthly")
     weekday = models.IntegerField(choices=WEEKDAYS)
     
     WEEK_NUMBERS = (
@@ -56,7 +56,7 @@ class MonthlyRecurringDate(models.Model):
         return "{} -- {} - {}".format(self.eventID.event_name, self.weekday, self.week_number)
     
 class OneTimeEventDate(models.Model):
-    eventID = models.OneToOneField(Events, on_delete=models.CASCADE, primary_key=True)
+    eventID = models.OneToOneField(Events, on_delete=models.CASCADE, primary_key=True, related_name="onetime")
     start_date = models.DateField()
     end_date = models.DateField()
     
@@ -64,7 +64,7 @@ class OneTimeEventDate(models.Model):
         return "{} -- {} - {}".format(self.eventID.event_name, self.start_date, self.end_date)
     
 class EventGames(models.Model):
-    eventID = models.ForeignKey(Events)
+    eventID = models.ForeignKey(Events, related_name="games")
     game = models.CharField(max_length=50)
     
     def __unicode__(self):
