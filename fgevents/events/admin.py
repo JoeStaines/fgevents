@@ -5,8 +5,14 @@ from .models import *
 
 class WeeklyDateInline(admin.TabularInline):
     model = WeeklyRecurringDate
+    
+class MonthlyDateInline(admin.TabularInline):
+    model = MonthlyRecurringDate
+    
+class OneTimeDateInline(admin.TabularInline):
+    model = OneTimeEventDate
 
 class EventsAdmin(admin.ModelAdmin):
-    inlines = (WeeklyDateInline,)
+    inlines = (WeeklyDateInline,MonthlyDateInline,OneTimeDateInline)
     
 admin.site.register(Events, EventsAdmin)

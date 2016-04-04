@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'map.apps.MapConfig',
     'events.apps.EventsConfig',
     'myprofile.apps.MyprofileConfig',
     'myauth.apps.MyauthConfig',
