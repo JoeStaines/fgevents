@@ -8,7 +8,8 @@ from .models import Events
 # Create your views here.
 
 def index(request):
-    pass
+    events = Events.objects.all()
+    return render(request, 'events/eventlist.html', {'events': events})
 
 def detail(request, event_id):
     event = get_object_or_404(Events, pk=event_id)

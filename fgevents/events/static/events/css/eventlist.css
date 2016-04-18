@@ -1,0 +1,18 @@
+.eventlist {
+    width: 800px;
+    margin: auto;
+}
+
+.eventlist .eventitem {
+    width: 100%;
+    height: 190px;
+    background-color: white;
+    margin-bottom: 10px;
+}
+
+.eventlist .eventitem .icon {
+    width: 180px;
+    height: 180px;
+    float: left;
+    margin: 5px 5px 0px 5px;
+}

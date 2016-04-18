@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{% static 'css/content.css' %}" />
+<link rel="stylesheet" href="{% static 'events/css/eventlist.css' %}" />
+{% endblock %}
+
+
+{% block content %}
+    <div class="center">
+    
+        <div class="eventlist">
+        {% for event in events %}
+            <div class="eventlist eventitem">
+                <div class="eventlist eventitem icon">
+                <img src="{% static 'events/images/temp.jpeg' %}">
+                </div>
+            {{ event }}<br>
+            </div>
+        {% endfor %}
+        </div>
+    
+    
+    </div>
+{% endblock %}
